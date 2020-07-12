@@ -1,15 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- ... -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+  />
+  <!-- ... -->
+  <link rel="stylesheet" type="text/css"
+          href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
 <style type="text/css">
+a{
+  text-decoration:none;
+}
+ul{
+  list-style:none;
+}
+.thumbnail-wrappper { 
+  width: 25%; 
+} 
+.thumbnail {
+  position: relative; 
+  padding-top: 0%; 
+  overflow: hidden; 
+} 
+img { 
+  position: relative; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  max-width: 10%; 
+  height: auto; 
+}
 .header {
-    background-color: #f1f1f1;
-    padding: 20px;
-    text-align: left;
+    padding: 0px;
+    text-align: center;
+}
+.header h1{
+  font-family: Nanum Myeongjo;
+  font-size: 250%;
+  text-decoration: none;
+  color: black;
+  line-height:20%;
+}
+.header h3{
+  font-family: Nanum Myeongjo;
+  font-size: 100%;
+  line-height:20%;
+}
+.prod_img{
+  float:left;
+}
+.prod_tile {
+    overflow: hidden;
+    background-color: #333;
+    margin: 5px 0px
+}
+.prod_tile a {
+    float: center;
+    display: block;
+    color: #f2f2f2;
+    text-decoration: none;
+}
+.prod_name{
+  font-family: Nanum Gothic;
+  font-size: 120%;
+  float: left;
+}
+.prod_link{
+  font-family: Nanum Gothic;
+  font-size: 100%;
+}
+.user_name{
+  font-family: Nanum Gothic;
+  text-align: right;
 }
 .topnav {
     overflow: hidden;
     background-color: #333;
+    font-family: Nanum Gothic;
+    font-size:100%;
 }
 /* Style the topnav links */
 .topnav a {
@@ -17,40 +90,67 @@
     display: block;
     color: #f2f2f2;
     text-align: center;
-    padding: 14px 16px;
+    padding: 1% 3%;
     text-decoration: none;
 }
-/* Change color on hover */
 .topnav a:hover {
     background-color: #ddd;
     color: black;
 }
-@media screen and (max-width: 800px) {
-    .leftcolumn, .rightcolumn {   
-        width: 100%;
-        padding: 0;
-    }
+.topnav_main{
+  overflow: hidden;
+  background-color: #f9d342;
+  font-family: Nanum Gothic;
+  font-size:100%;
 }
-/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
-@media screen and (max-width: 400px) {
-    .topnav a {
-        float: none;
-        width: 100%;
-    }
+.footer{
+  font-family: Nanum Gothic;
+  font-size: 0.5em;
 }
+
 </style>
 
 <title> 잔고제거기 </title>
 </head>
 <body>
 <div class="header">
-  <h1>잔고제거기</h1>
+  <a href="/products/"><h1>잔고제거기</h1></a>
   <h3>가장 효율적으로 지갑을 비우자.</h3>
 </div>
+<div class='user_name'>
+{% if user.is_authenticated %}
+  <h4> 어서오세요, {{user.username}} 님 </h4>
+{% endif %}
+</div>
+
 <div class="topnav">
+  <a href="/products/" class="topnav_main">모든 상품</a>
+  <a href="/products/computer/">컴퓨터</a>
+  <a href="/products/digital/">디지털</a>
+  <a href="/products/grocery/">식품</a>
+  <a href="/products/homeapps/">가전/가구</a>
+  <a href='/products/cloth/'>의류/잡화</a>
+  <a href='/products/extra/'>기타(미분류)</a>
+  {% if user.is_authenticated %}
+    <a href="/favorites/" style="float:right">찜 목록</a>
+    <a href="/logout/" style="float:right">로그아웃</a>
+  {% else %}
+    <a href="/login/" style="float:right">로그인</a>    
+  {% endif %}
+</div>
+
+<div class="prod_tile">
   <ul>
-  {% for category in category_list %}
-    <li><a href="/products/{{ category.id }}/">{{ category.name }} </a></li>
+  {% for prod in prod_list %}
+    <li>
+      <div class="thumbnail-wrapper">
+        <div class="thumbnail">
+          <img src={{ prod.image }} class="prod_img">
+        </div>
+      </div>
+      <a href="{{ prod.link }}/" class="prod_name">{{ prod.name }} </a>
+      <a href="{{ prod.mall_link}}/" class="prod_link">쇼핑몰로 이동 </a>
+    </li>
   {% endfor %}
 </div>
 <div class="footer">

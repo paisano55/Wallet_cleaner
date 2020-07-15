@@ -141,6 +141,11 @@ fieldset, img {
     float: right;
     color: #777;
 }
+.error_msg{
+    color = #FF0000;
+    font-size=18px;
+    font-family: Nanum Gothic;
+}
 </style>
 
 <div class="inner_login">
@@ -162,6 +167,9 @@ fieldset, img {
                 <input type="password" id="loginPw" name="password2" placeholder="Password Check" >
                 </div>
             </div>
+            {% if error %}
+                <font class='error_msg'> {{error}} </font>
+            {% endif %}
             <button type="submit" class="btn_login" >회원가입</button> 
             </form>
                        

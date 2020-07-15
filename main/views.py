@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+import json
 # Create your views here.
 
 def product_by_cate(request,cate):
@@ -19,7 +23,8 @@ def regist(request):
             user = User.objects.create_user(username=request.POST["username"],password=request.POST["password1"])
             auth.login(request,user)
             return redirect('/products/')
-        return render(request, 'register.html')
+        else:
+            return render(request, 'register.html',{'error': '비밀번호가 다릅니다.'})
     return render(request, 'register.html')
 
 def login(request):
@@ -43,23 +48,17 @@ def favorite_list(request):
     fav_list = Product.objects.order_by('-date')
     return render(request,"favorite.html",{'fav_list':fav_list})
 
-def fav_toggle(request,prod_pk):
-    next_path = request.GET.get('next')
-    # post_pk에 해당하는 Post객체
-    post = get_object_or_404(Post, pk=prod_pk)
-    # 요청한 사용자
-    user = request.user
-
-    # 사용자의 like_posts목록에서 like_toggle할 Post가 있는지 확인
-    filtered_like_posts = user.like_posts.filter(pk=post.pk)
-    # 존재할경우, like_posts목록에서 해당 Post를 삭제
-    if filtered_like_prods.exists():
-        user.like_posts.remove(post)
-    # 없을 경우, like_posts목록에 해당 Post를 추가
+@login_required
+@require_POST
+def prod_like(request):
+    pk = request.POST.get('pk',None)
+    prod = get_object_or_404(Product, pk=pk)
+    prod_like, prod_like_created = prod.like_set.get_or_created(user=request.user)
+    if not prod_like_created:
+        prod_like.delete()
+        message = "찜 취소"
     else:
-        user.like_prods.add(post)
-
-    # 이동할 path가 존재할 경우 해당 위치로, 없을 경우 Post상세페이지로 이동
-    if next_path:
-        return redirect(next_path)
-    return redirect('post:post_detail', post_pk=prod_pk)
+        message = "찜"
+     
+    context={'like_count':prod.like_count,'message':message,'username':request.user.username}
+    return HttpResponse(json.dumps(context), content_type="application/json")

@@ -1,0 +1,95 @@
+a{
+  text-decoration:none;
+}
+ul{
+  list-style:none;
+}
+img { 
+  position: relative; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  width:100px;
+  height:100px;
+  max-width: 10%; 
+  height: auto; 
+}
+.header {
+    padding: 0px;
+    text-align: center;
+}
+.header h1{
+  font-family: Nanum Myeongjo;
+  font-size: 300%;
+  text-decoration: none;
+  color: black;
+  line-height:20%;
+}
+.header h3{
+  font-family: Nanum Myeongjo;
+  font-size: 100%;
+  line-height:20%;
+}
+.thumb{
+  width: 250px;
+  height: 250px;
+  float :left;
+}
+.prod_img{
+
+}
+.prod_tile {
+    overflow: hidden;
+    background-color: #333;
+    margin: 5px 0px
+}
+.prod_tile a {
+    float: center;
+    display: block;
+    color: #f2f2f2;
+    text-decoration: none;
+}
+.prod_name{
+  font-family: Nanum Gothic;
+  font-size: 120%;
+  float: left;
+}
+.prod_link{
+  font-family: Nanum Gothic;
+  font-size: 100%;
+}
+.user_name{
+  font-family: Nanum Gothic;
+  text-align: right;
+}
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    font-family: Nanum Gothic;
+    font-size:100%;
+}
+/* Style the topnav links */
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 1% 3%;
+    text-decoration: none;
+}
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+.topnav_main{
+  overflow: hidden;
+  background-color: #f9d342;
+  color: black;
+  font-family: Nanum Gothic;
+  font-size:100%;
+}
+.footer{
+  font-family: Nanum Gothic;
+  font-size: 0.5em;
+}

@@ -1,47 +1,25 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
-  <!-- ... -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
-  />
-  <!-- ... -->
-  <link rel="stylesheet" type="text/css"
-          href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-</head>
-<style type="text/css">
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<style>
 a{
   text-decoration:none;
 }
 ul{
   list-style:none;
 }
-.thumbnail-wrappper { 
-  width: 25%; 
-} 
-.thumbnail {
-  position: relative; 
-  padding-top: 0%; 
-  overflow: hidden; 
-} 
-img { 
-  position: relative; 
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  bottom: 0; 
-  max-width: 10%; 
-  height: auto; 
-}
+
 .header {
     padding: 0px;
     text-align: center;
 }
 .header h1{
   font-family: Nanum Myeongjo;
-  font-size: 250%;
+  font-size: 300%;
   text-decoration: none;
   color: black;
   line-height:20%;
@@ -51,19 +29,41 @@ img {
   font-size: 100%;
   line-height:20%;
 }
-.prod_img{
-  float:left;
-}
 .prod_tile {
     overflow: hidden;
-    background-color: #333;
+    background-color: #434042;
     margin: 5px 0px
 }
 .prod_tile a {
     float: center;
     display: block;
-    color: #f2f2f2;
+    color: white;
     text-decoration: none;
+}
+table, th, td {
+    border: 2px solid #bcbcbc;
+    border-collapse: collapse;
+    text-align: center;
+}
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-size { 
+  font-size: 30px; 
+  color: rgba(255, 0, 0, 1);
+  text-align:center;
+}
+.thumb{
+  width:120px;
+  height:100px;
+  overflow:hidden;
+  background-color:white;
+}
+.table_col{
+  
+}
+.prod_img{
+  width:100px;
+  height:auto;
+
 }
 .prod_name{
   font-family: Nanum Gothic;
@@ -100,6 +100,7 @@ img {
 .topnav_main{
   overflow: hidden;
   background-color: #f9d342;
+  color: black;
   font-family: Nanum Gothic;
   font-size:100%;
 }
@@ -107,15 +108,15 @@ img {
   font-family: Nanum Gothic;
   font-size: 0.5em;
 }
-
 </style>
-
-<title> 잔고제거기 </title>
+  <title> 잔고제거기 </title>
 </head>
+
+
 <body>
 <div class="header">
   <a href="/products/"><h1>잔고제거기</h1></a>
-  <h3>가장 효율적으로 지갑을 비우자.</h3>
+  <h3>가장 효율적으로 지갑을 비우는 곳</h3>
 </div>
 <div class='user_name'>
 {% if user.is_authenticated %}
@@ -140,18 +141,30 @@ img {
 </div>
 
 <div class="prod_tile">
-  <ul>
+  <table width="100%">
   {% for prod in prod_list %}
-    <li>
-      <div class="thumbnail-wrapper">
-        <div class="thumbnail">
-          <img src={{ prod.image }} class="prod_img">
+    <tr class="table_row">
+      <td>
+        <button type="button" name="{{ prod.id }}" class="like" value="Like" aria-label="Add to favorites" aria-hidden="true" aria-pressed="false">
+            <i class="material-icons md-size mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>
+            <i class="material-icons md-size mdc-icon-button__icon">favorite_border</i>
+        </button>
+        <p id="count-{{ prod.id }}"> {{prod.like_count}} </p>
+      </td>
+      <td class="table_col">
+        <div class='thumb'>
+            <img src={{ prod.image }} class="prod_img">
         </div>
-      </div>
-      <a href="{{ prod.link }}/" class="prod_name">{{ prod.name }} </a>
-      <a href="{{ prod.mall_link}}/" class="prod_link">쇼핑몰로 이동 </a>
-    </li>
+      </td>
+      <td class="table_col">
+        <a href="{{ prod.link }}/" class="prod_name">{{ prod.name }} </a>
+      </td>
+      <td class="table_col">
+        <a href="{{ prod.mall_link}}/" class="prod_link">쇼핑몰로 이동 </a>
+      </td>
+    </tr>
   {% endfor %}
+  </table>
 </div>
 <div class="footer">
   <p>잔고제거기 개발자:김현민 소속:인천과학예술영재학교.</p>

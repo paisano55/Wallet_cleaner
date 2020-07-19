@@ -10,17 +10,30 @@ class Product(models.Model):
     image = models.CharField(max_length=200,default=None)
     link = models.CharField(max_length=200)
     mall_link = models.CharField(max_length=200)
-    end_vote = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='end_user_set',through='End')
-    like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='like_user_set',through='Like')
+    end_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='end_prods',through='End')
+    like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='like_prods',through='Like')
 
     @property
     def end_count(self):
-        return self.end_vote.count()
+        return self.end_user_set.count()
     
     def like_count(self):
         return self.like_user_set.count()
 
 class Like(models.Model):
-    prod = models.ForeignKey(Product)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    prod = models.ForeignKey(Product,on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = (
+            ('user','prod')
+        )
 
-
+class End(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    prod = models.ForeignKey(Product,on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = (
+            ('user','prod')
+        )

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product
+from .models import Product, Like, End
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
@@ -17,12 +17,20 @@ def product_all(request):
     prod_list = Product.objects.all()
     return render(request,"main.html",{'prod_list':prod_list})
 
+def favorite_list(request):
+    fav_list = request.user.like_prods.all()
+    print(fav_list)
+    return render(request,"main.html",{'prod_list':fav_list})
+
 def regist(request):
     if request.method == 'POST':
         if request.POST["password1"] == request.POST["password2"]:
-            user = User.objects.create_user(username=request.POST["username"],password=request.POST["password1"])
-            auth.login(request,user)
-            return redirect('/products/')
+            try:
+                user = User.objects.create_user(username=request.POST["username"],password=request.POST["password1"])
+                auth.login(request,user)
+                return redirect('/products/')
+            except:
+                return render(request, 'register.html',{'error': '이미 존재하는 ID입니다.'})
         else:
             return render(request, 'register.html',{'error': '비밀번호가 다릅니다.'})
     return render(request, 'register.html')
@@ -44,21 +52,33 @@ def logout(request):
     auth.logout(request)
     return redirect('/products/')
 
-def favorite_list(request):
-    fav_list = Product.objects.order_by('-date')
-    return render(request,"favorite.html",{'fav_list':fav_list})
-
 @login_required
 @require_POST
 def prod_like(request):
     pk = request.POST.get('pk',None)
     prod = get_object_or_404(Product, pk=pk)
-    prod_like, prod_like_created = prod.like_set.get_or_created(user=request.user)
+    prod_like, prod_like_created = prod.like_set.get_or_create(user=request.user)
     if not prod_like_created:
         prod_like.delete()
-        message = "찜 취소"
+        message = "Favorite Cancel"
     else:
-        message = "찜"
+        message = "Favorite"
      
-    context={'like_count':prod.like_count,'message':message,'username':request.user.username}
+    context={'like_count':prod.like_count(),'message':message,'username':request.user.username,'add':prod_like_created}
+    print(context)
+    return HttpResponse(json.dumps(context))
+
+@login_required
+@require_POST
+def end_vote(request):
+    pk = request.POST.get('pk',None)
+    prod = get_object_or_404(Product, pk=pk)
+    prod_end, prod_end_created = prod.end_set.get_or_create(user=request.user)
+    if not prod_end_created:
+        message = "End vote cancel"
+    else:
+        message = "End vote added"
+     
+    context={'end_count':prod.end_count,'message':message,'username':request.user.username,'add':prod_end_created}
     return HttpResponse(json.dumps(context), content_type="application/json")
+

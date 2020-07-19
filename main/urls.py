@@ -14,5 +14,5 @@ urlpatterns = [
     path('logout/',views.logout),
     path('favorites/',views.favorite_list),
     path('like/',views.prod_like,name="prod_like"),
-    #path('endvote/',views.end_vote,name="end_vote"),
+    path('endvote/',views.end_vote,name="end_vote"),
 ]
